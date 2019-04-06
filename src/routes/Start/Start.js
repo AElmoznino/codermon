@@ -1,6 +1,7 @@
-import React from 'react'
-import gql from 'graphql-tag'
-import { Query } from 'react-apollo'
+import React, { useState } from "react";
+import gql from "graphql-tag";
+import { Query } from "react-apollo";
+import { filterPokemons } from "utils/utils";
 
 const GET_POKEMONS = gql`
   {
@@ -12,25 +13,32 @@ const GET_POKEMONS = gql`
       types
     }
   }
-`
+`;
 
-const Start = () => (
-  <Query query={GET_POKEMONS}>
-    {({ loading, error, data: { pokemons } }) => {
-      if (loading) return 'Loading...'
-      if (error) return `Error! ${error.message}`
-      //console.log(data)
-      return (
-        <div>
-          {pokemons.map(pokemon => (
-            <div key={pokemon.id}>
-              <p>{pokemon.name}</p>
-              <img src={pokemon.image} />
+const Start = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  return (
+    <Query query={GET_POKEMONS}>
+      {({ loading, error, data: { pokemons } }) => {
+        if (loading) return "Loading...";
+        if (error) return `Error! ${error.message}`;
+        //console.log(data)
+        return (
+          <>
+            <input onChange={event => setSearchTerm(event.target.value)} />
+            <div>
+              {filterPokemons(pokemons, searchTerm).map(pokemon => (
+                <div key={pokemon.id}>
+                  <p>{pokemon.name}</p>
+                  <img src={pokemon.image} />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      )
-    }}
-  </Query>
-)
-export default Start
+          </>
+        );
+      }}
+    </Query>
+  );
+};
+export default Start;
