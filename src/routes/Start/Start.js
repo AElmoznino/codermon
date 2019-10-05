@@ -3,6 +3,7 @@ import gql from 'graphql-tag'
 import { Link } from 'react-router-dom'
 import { Query } from 'react-apollo'
 import { filterPokemons } from 'utils/utils'
+import './Start.css'
 
 const GET_POKEMONS = gql`
   {
@@ -25,14 +26,24 @@ const Start = () => {
         //console.log(data)
         return (
           <>
-            <input onChange={event => setSearchTerm(event.target.value)} />
-            <div>
-              {filterPokemons(pokemons, searchTerm).map(pokemon => (
-                <div key={pokemon.id}>
-                  <Link to={`/pokemon/${pokemon.name}`}>{pokemon.name}</Link>
-                  <img src={pokemon.image} />
-                </div>
-              ))}
+            <div className="center input-wrap">
+              <input
+                className="search-input"
+                onChange={event => setSearchTerm(event.target.value)}
+                placeholder="Search for pokemon"
+              />
+            </div>
+            <div className="center">
+              <div className="pokemons-wrap">
+                {filterPokemons(pokemons, searchTerm).map(pokemon => (
+                  <div key={pokemon.id} className="pokemon-wrap">
+                    <Link to={`/pokemon/${pokemon.name}`}>
+                      <p>{pokemon.name}</p>
+                      <img className="pokemon-image" src={pokemon.image} />
+                    </Link>
+                  </div>
+                ))}
+              </div>
             </div>
           </>
         )
